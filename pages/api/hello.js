@@ -1,3 +1,4 @@
+import { pipe } from "ramda";
 import { connectToDatabase } from "lib/mongodb";
 import { checkAuth, checkMethod } from "lib/requestChecker";
 import { getUserInDB, saveUserInDB } from "lib/users";
@@ -21,7 +22,7 @@ const handler = async (req, res) => {
 
 	// Return api response
 	res.status(200).json({
-		response: bodyResult,
+		meesage: bodyResult,
 		method: methodResult,
 		userExist: userExistResult,
 		userSave: saveUserResult,
