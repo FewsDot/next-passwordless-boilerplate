@@ -1,25 +1,25 @@
 import { connectToDatabase } from "lib/mongodb";
 import { checkAuth, checkMethod } from "lib/requestChecker";
 import { generateRandomToken, saveTokenInDB } from "lib/token";
-
-// SIDES EFFECTS
+import { sendAuthMail } from "lib/mailer";
 
 const handler = async (req, res) => {
-	//Destructure db
 	const { db } = await connectToDatabase();
 	const collectionToken = db.collection("token");
 
-	// 1 - Recoit un input, le verifie, et retourne un objet
-	const bodyResult = checkAuth(req.body.email);
-	const methodResult = checkMethod(req);
+	const bodyResult = checkAuth(req.body.email); // Check if email is valid
+	const methodResult = checkMethod(req); // Check if method is valid
+	const authToken = generateRandomToken(); // generate an object with token and validity
+	const tokenResult = await saveTokenInDB(collectionToken, authToken); // Save token in DB
+	const sendByMailResult = await sendAuthMail(req.body.email, authToken.token);
 
-	// 2 - Genere un token d'authentification
-	const authToken = generateRandomToken();
-
-	// 3 - Sauvegarde le token en base de donnée
-	const tokenResult = await saveTokenInDB(collectionToken, authToken);
-
-	res.status(200).json({ response: bodyResult, method: methodResult, token: tokenResult });
+	// Return api response
+	res.status(200).json({
+		response: bodyResult,
+		method: methodResult,
+		token: tokenResult,
+		sendMail: sendByMailResult,
+	});
 };
 
 export default handler;
