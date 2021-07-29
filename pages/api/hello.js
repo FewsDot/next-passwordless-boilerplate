@@ -10,6 +10,7 @@ const handler = async (req, res) => {
 	const tokenCollection = db.collection("token");
 	const usersCollection = db.collection("users");
 	{
+		//TODO : Tenter de creer une pipe en lui passant req en fonction pour qu'elle check auth et method)
 		/*
 			Check if method is valid
 				- Error ? => return message from api
