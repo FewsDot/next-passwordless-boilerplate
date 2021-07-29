@@ -28,11 +28,7 @@ const handler = async (req, res) => {
 																					-
 				- Succes ? =>  Send Mail To user
 
-			
-
- */
-	}
-	const bodyResult = checkAuth(req.body.email); // Check if email is valid
+				const bodyResult = checkAuth(req.body.email); // Check if email is valid
 	const methodResult = checkMethod(req); // Check if method is valid
 	const userExistResult = await getUserInDB(usersCollection, req.body.email); // Check if user exist in db
 	const saveUserResult = await saveUserInDB(usersCollection, req.body.email); // Save User in DB
@@ -49,6 +45,22 @@ const handler = async (req, res) => {
 		token: tokenResult,
 		sendMail: sendByMailResult,
 	});
+
+
+ */
+	}
+
+	try {
+		const methodResult = checkMethod(req); // Check if method is valid
+		const bodyResult = checkAuth(req.body.email); // Check if email is valid
+		console.log(methodResult);
+		console.log(bodyResult);
+
+		res.status(200).json({ methodResult, bodyResult });
+	} catch (error) {
+		res.status(400).json(error);
+	}
+	// Return api response
 };
 
 export default handler;
