@@ -9,58 +9,21 @@ const handler = async (req, res) => {
 	const { db } = await connectToDatabase();
 	const tokenCollection = db.collection("token");
 	const usersCollection = db.collection("users");
-	{
-		//TODO : Tenter de creer une pipe en lui passant req en fonction pour qu'elle check auth et method)
-		/*
-			Check if method is valid
-				- Error ? => return message from api
-				- Succes ? => 
-			Check if email is valid							
-				- Error ? => return message from api
-				- Succes ? => 
-			Create and save token in DB
-				- Error ? => return message from api
-				- Succes ? => 
-			Check if user exist in db
-				- Error ? => Save User In DB
-												- Error ? => return message from api
-												- Succes ? => Send Mail To user
-																					-
-				- Succes ? =>  Send Mail To user
-
-				const bodyResult = checkAuth(req.body.email); // Check if email is valid
-	const methodResult = checkMethod(req); // Check if method is valid
-	const userExistResult = await getUserInDB(usersCollection, req.body.email); // Check if user exist in db
-	const saveUserResult = await saveUserInDB(usersCollection, req.body.email); // Save User in DB
-	const authToken = generateRandomToken(); // Generate an object with token and validity
-	const tokenResult = await saveTokenInDB(tokenCollection, authToken); // Save token in DB
-	const sendByMailResult = await sendAuthMail(req.body.email, authToken.token); // Send Mail to User
-
-	// Return api response
-	res.status(200).json({
-		meesage: bodyResult,
-		method: methodResult,
-		userExist: userExistResult,
-		userSave: saveUserResult,
-		token: tokenResult,
-		sendMail: sendByMailResult,
-	});
-
-
- */
-	}
+	let history = [];
 
 	try {
-		const methodResult = checkMethod(req); // Check if method is valid
-		const bodyResult = checkAuth(req.body.email); // Check if email is valid
-		console.log(methodResult);
-		console.log(bodyResult);
-
-		res.status(200).json({ methodResult, bodyResult });
+		checkMethod(req);
+		checkAuth(req.body.email);
+		await getUserInDB(usersCollection, req.body.email); // Check if user exist in db
+		const authToken = generateRandomToken(); // Generate an object with token and validity
+		await saveTokenInDB(tokenCollection, authToken); // Save token in DB
+		await sendAuthMail(req.body.email, authToken.token); // Send Mail to User
+		res
+			.status(200)
+			.json({ process: "finish", status: "succes", message: "Please, check your mails" });
 	} catch (error) {
-		res.status(400).json(error);
+		res.status(400).json({ error: error });
 	}
-	// Return api response
 };
 
 export default handler;
