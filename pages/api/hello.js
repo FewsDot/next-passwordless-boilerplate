@@ -9,21 +9,26 @@ const handler = async (req, res) => {
 	const { db } = await connectToDatabase();
 	const tokenCollection = db.collection("token");
 	const usersCollection = db.collection("users");
-	let history = [];
 
 	try {
 		checkMethod(req);
 		checkAuth(req.body.email);
-		await getUserInDB(usersCollection, req.body.email); // Check if user exist in db
-		const authToken = generateRandomToken(); // Generate an object with token and validity
-		await saveTokenInDB(tokenCollection, authToken); // Save token in DB
-		await sendAuthMail(req.body.email, authToken.token); // Send Mail to User
-		res
-			.status(200)
-			.json({ process: "finish", status: "succes", message: "Please, check your mails" });
+		const { email } = req.body;
+		const authToken = generateRandomToken();
+		const isUserExist = await getUserInDB(usersCollection, email);
+		!isUserExist.data && (await saveUserInDB(usersCollection, email));
+		await saveTokenInDB(tokenCollection, authToken);
+		await sendAuthMail(email, authToken.token);
+
+		res.status(200).json({ status: "succes", message: "Please check you mail" });
 	} catch (error) {
 		res.status(400).json({ error: error });
+		//TODO: Creer fonction qui  sauvegarde l'erreur dans la bdd
 	}
 };
 
 export default handler;
+
+// Test
+// - 1 Mauvaise methode
+// -
