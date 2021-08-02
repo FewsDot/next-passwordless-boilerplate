@@ -1,4 +1,3 @@
-import { pipe } from "ramda";
 import { connectToDatabase } from "lib/mongodb";
 import { checkAuth, checkMethod } from "lib/requestChecker";
 import { getUserInDB, saveUserInDB } from "lib/users";
@@ -28,7 +27,3 @@ const handler = async (req, res) => {
 };
 
 export default handler;
-
-// Test
-// - 1 Mauvaise methode
-// -
