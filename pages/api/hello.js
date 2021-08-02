@@ -19,10 +19,13 @@ const handler = async (req, res) => {
 		await saveTokenInDB(tokenCollection, authToken);
 		await sendAuthMail(email, authToken.token);
 
-		res.status(200).json({ status: "succes", message: "Please check you mail" });
+		res.status(200).json({ status: "succes", message: "Please check you mail !" });
 	} catch (error) {
-		res.status(400).json({ error: error });
-		//TODO: Creer fonction qui  sauvegarde l'erreur dans la bdd
+		if (error.type === "dependence") {
+			console.log("dependance error");
+			//TODO: Creer fonction qui sauvegarde l'erreur dans la bdd
+		}
+		res.status(400).json(error);
 	}
 };
 
