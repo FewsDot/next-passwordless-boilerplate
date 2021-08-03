@@ -26,8 +26,6 @@ const handler = async (req, res) => {
 		await saveInDB(db.collection("tokens"), authToken); //Save Token In DB
 		await sendAuthMail(email, authToken); //Send Token To User
 		res.status(200).json({
-			// Response Success
-			status: "succes",
 			type: user ? "SignIn" : "SignUp",
 			message: "Please check your email",
 		});
