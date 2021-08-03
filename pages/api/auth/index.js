@@ -1,35 +1,39 @@
 import { connectToDatabase } from "lib/mongodb";
 import { checkExistence, checkEmail, checkScript, checkMethod } from "lib/requestChecker";
-import { getUserInDB, createUser } from "lib/users";
+import { getUser, createUser } from "lib/users";
 import { nowInTimestamp } from "lib/time";
 import { saveInDB } from "lib/database";
 import { generateRandomToken } from "lib/token";
 import { sendAuthMail } from "lib/mailer";
 
 const handler = async (req, res) => {
-	const { db } = await connectToDatabase();
-	const tokensCollection = db.collection("tokens");
-	const usersCollection = db.collection("users");
-	const errorsCollection = db.collection("errors");
-	const now = nowInTimestamp();
+	const { db } = await connectToDatabase(); //Init DB
+	const now = nowInTimestamp(); //Get actual Timestamp
+	const {
+		body: { email },
+		method,
+	} = req; // Request destructuration
+	//TODO: Create One Function for all checkings
 
 	try {
-		checkMethod(req.method, "POST");
-		checkScript(req.body.email);
-		checkExistence(req.body.email, "email");
-		checkEmail(req.body.email);
-
-		const { email } = req.body;
-		const authToken = generateRandomToken(now);
-		const isUserExist = await getUserInDB(usersCollection, email);
-		!isUserExist.data && (await saveInDB(usersCollection, createUser(email, now)));
-		await saveInDB(tokensCollection, authToken);
-		await sendAuthMail(email, authToken);
-
-		res.status(200).json({ status: "succes", message: "Please check you mail !" });
+		checkMethod(method, "POST");
+		checkScript(email);
+		checkExistence(email, "email");
+		checkEmail(email);
+		const user = await getUser(db.collection("users"), email); //Check If User
+		const newUser = !user && (await saveInDB(db.collection("users"), createUser(email, now))); //If not Create New User
+		const authToken = generateRandomToken(now, user ? user._id : newUser.insertedId); //Create Auth Token
+		await saveInDB(db.collection("tokens"), authToken); //Save Token In DB
+		await sendAuthMail(email, authToken); //Send Token To User
+		res.status(200).json({
+			// Response Success
+			status: "succes",
+			type: user ? "SignIn" : "SignUp",
+			message: "Please check your email",
+		});
 	} catch (error) {
 		if (error.type === "dependence") {
-			await saveInDB(errorsCollection, error);
+			await saveInDB(db.collection("errors"), error); //Save dependence error in DB
 			res.status(400).json({ error: "dependance error", message: "Error send to the webmaster." });
 		}
 		res.status(400).json(error);

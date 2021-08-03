@@ -9,7 +9,8 @@ const handler = async (req, res) => {
 		const resultOfChekingScript = checkScript(req.query.token);
 		const resultOfCheckingToken = checkExistence(req.query.token, "token");
 
-		//Check if token is in db
+		//TODO: Check if token is in db
+
 		//Check token validity
 		//Create JWT
 		//Send JWT
