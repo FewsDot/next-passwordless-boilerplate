@@ -18,6 +18,7 @@ const handler = async (req, res) => {
 		checkScript(req.body.email);
 		checkExistence(req.body.email, "email");
 		checkEmail(req.body.email);
+
 		const { email } = req.body;
 		const authToken = generateRandomToken(now);
 		const isUserExist = await getUserInDB(usersCollection, email);
