@@ -1,5 +1,5 @@
 import { connectToDatabase } from "lib/mongodb";
-import { checkAuth, checkMethod } from "lib/requestChecker";
+import { checkExistence, checkEmail, checkMethod } from "lib/requestChecker";
 import { getUserInDB, createUser } from "lib/users";
 import { nowInTimestamp } from "lib/time";
 import { saveInDB } from "lib/database";
@@ -14,8 +14,9 @@ const handler = async (req, res) => {
 	const now = nowInTimestamp();
 
 	try {
-		checkMethod(req);
-		checkAuth(req.body.email);
+		checkMethod(req.method, "POST");
+		checkExistence(req.body.email, "email");
+		checkEmail(req.body.email);
 		const { email } = req.body;
 		const authToken = generateRandomToken(now);
 		const isUserExist = await getUserInDB(usersCollection, email);
