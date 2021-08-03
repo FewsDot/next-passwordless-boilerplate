@@ -1,5 +1,5 @@
 import { connectToDatabase } from "lib/mongodb";
-import { checkExistence, checkEmail, checkMethod } from "lib/requestChecker";
+import { checkExistence, checkEmail, checkScript, checkMethod } from "lib/requestChecker";
 import { getUserInDB, createUser } from "lib/users";
 import { nowInTimestamp } from "lib/time";
 import { saveInDB } from "lib/database";
@@ -15,6 +15,7 @@ const handler = async (req, res) => {
 
 	try {
 		checkMethod(req.method, "POST");
+		checkScript(req.body.email);
 		checkExistence(req.body.email, "email");
 		checkEmail(req.body.email);
 		const { email } = req.body;
