@@ -1,13 +1,17 @@
 import { connectToDatabase } from "lib/mongodb";
-
+import { checkAllMethod } from "lib/requestChecker";
 const handler = async (req, res) => {
 	const { db } = await connectToDatabase();
-	const tokensCollection = db.collection("tokens");
-	const now = nowInTimestamp();
 
-	// TODO - FAIRE SYSTEME DE VERIF DU TOKEN
 	try {
-		res.status(200).json({ status: "succes", message: "Token verified" });
+		//Check Method & param
+		const resultOfCheckingMethod = checkAllMethod(req, "GET");
+
+		//Check if token is in db
+		//Check token validity
+		//Create JWT
+		//Send JWT
+		res.status(200).json({ status: "succes", resultOfCheckingMethod });
 	} catch (error) {
 		res.status(400).json(error);
 	}
