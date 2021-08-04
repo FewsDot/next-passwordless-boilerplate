@@ -10,7 +10,7 @@ const handler = async (req, res) => {
 	const method = req.method;
 
 	try {
-		pipeVerifyCheck(method, "GET", token, "token"); //Check Method & param
+		pipeVerifyCheck(method, "GET", token, "Token"); //Check Method & param
 
 		const tokenFromDB = await getToken(db.collection("tokens"), token); //Check If Token exist
 
@@ -18,7 +18,7 @@ const handler = async (req, res) => {
 		//Create JWT
 		//Send JWT
 		res.status(200).json({
-			status: "succes",
+			status: "Succes",
 			now: now,
 			method: method,
 			tokenFromRequest: token,

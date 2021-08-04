@@ -13,7 +13,7 @@ const handler = async (req, res) => {
 	const method = req.method;
 
 	try {
-		pipeAuthCheck(method, "POST", email, "email"); //Checking on Request
+		pipeAuthCheck(method, "POST", email, "Email"); //Checking on Request
 		const user = await getUser(db.collection("users"), email); //Check If User
 		const newUser = !user && (await saveInDB(db.collection("users"), createUser(email, now))); //If not Create New User
 		const userID = user ? user._id : newUser.insertedId; //Get UserID
@@ -21,17 +21,17 @@ const handler = async (req, res) => {
 		await saveInDB(db.collection("tokens"), authToken); //Save Token In DB
 		await sendAuthMail(email, authToken); //Send Token To User
 		res.status(200).json({
-			status: "succes",
+			status: "Succes",
 			type: user ? "SignIn" : "SignUp",
 			message: "Please check your email",
 		});
 	} catch (error) {
 		!error.type
 			? res.status(400).json(error) //Return Normal Error
-			: (await saveInDB(db.collection("errors"), { step: "auth", timestamp: now, error }), //Save dependence error in DB
+			: (await saveInDB(db.collection("errors"), { step: "Auth", timestamp: now, error }), //Save dependence error in DB
 			  res
 					.status(400)
-					.json({ error: "dependance error", message: "Error send to the webmaster." }));
+					.json({ error: "Dependance error", message: "Error send to the webmaster." }));
 	}
 };
 
