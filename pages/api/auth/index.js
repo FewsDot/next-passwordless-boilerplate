@@ -9,8 +9,8 @@ import { sendAuthMail } from "lib/mailer";
 const handler = async (req, res) => {
 	const { db } = await connectToDatabase(); //Init DB
 	const now = nowInTimestamp(); //Get actual Timestamp
-	const { email } = req.body;
-	const method = req.method;
+	const { email } = req.body; //Get email from Request Body
+	const method = req.method; //Get method from Request
 
 	try {
 		pipeAuthCheck(method, "POST", email, "Email"); //Checking on Request
@@ -31,7 +31,7 @@ const handler = async (req, res) => {
 			: (await saveInDB(db.collection("errors"), { step: "Auth", timestamp: now, error }), //Save dependence error in DB
 			  res
 					.status(400)
-					.json({ error: "Dependance error", message: "Error send to the webmaster." }));
+					.json({ error: "Dependance error", message: "Error send to the webmaster." })); //Return Dependance Error
 	}
 };
 
