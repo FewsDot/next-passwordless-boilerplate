@@ -1,28 +1,15 @@
 import { saveInDB } from "lib/database";
-import { pipeBearerCheck, throwerError } from "lib/requestChecker";
-import jwt from "jsonwebtoken";
-
-const checkJWT = (token) => {
-	const formatted = token.split(" ")[1];
-	return jwt.verify(formatted, process.env.JWT_SECRET, (err, decoded) => {
-		return err ? throwerError(err.name, err.message) : decoded;
-	});
-};
+import { nowInTimestamp } from "lib/time";
+import { pipeBearerCheck } from "lib/requestChecker";
 
 const handler = async (req, res) => {
 	try {
-		//TODO Check if User is Auth for returning password secret
-
-		const { authorization } = req.headers;
-		pipeBearerCheck(authorization, "Bearer Token");
-		const decodedToken = checkJWT(authorization);
-
-		console.log("decodedToken : ");
-		console.log(decodedToken);
+		const { authorization } = req.headers; //Get JWT from Request Header
+		pipeBearerCheck(authorization, "Bearer Token"); // Check If JWT exist and is not expired.
 
 		res.status(200).json({
 			status: "Succes",
-			decodedToken,
+			now: nowInTimestamp(),
 		});
 	} catch (error) {
 		!error.type
