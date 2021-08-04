@@ -6,7 +6,7 @@ const handler = async (req, res) => {
 	try {
 		const { authorization } = req.headers; //Get JWT from Request Header
 		pipeBearerCheck(authorization, "Bearer Token"); // Check If JWT exist and is not expired.
-
+		//TODO: Get User info from DB with user id contenue dans son jwt decodé
 		res.status(200).json({
 			status: "Succes",
 			now: nowInTimestamp(),
