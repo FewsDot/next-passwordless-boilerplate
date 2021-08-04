@@ -17,12 +17,13 @@ const handler = async (req, res) => {
 		const user = await getInDB(db.collection("users"), { email: email }); //Check If User
 		const newUser = !user && (await saveInDB(db.collection("users"), createUser(email, now))); //If not Create New User
 		const userID = user ? user._id : newUser.insertedId; //Get UserID
+		const authType = user ? "SignIn" : "SignUp";
 		const authToken = generateRandomToken(now, userID); //Create Auth Token
 		await saveInDB(db.collection("tokens"), authToken); //Save Token In DB
-		await sendAuthMail(email, authToken); //Send Token To User
+		await sendAuthMail(authType, email, authToken); //Send Token To User
 		res.status(200).json({
 			status: "Succes",
-			type: user ? "SignIn" : "SignUp",
+			type: authType,
 			message: "Please check your email",
 		});
 	} catch (error) {
