@@ -1,8 +1,8 @@
 import { connectToDatabase } from "lib/mongodb";
 import { pipeAuthCheck } from "lib/requestChecker";
-import { getUser, createUser } from "lib/users";
+import { createUser } from "lib/users";
 import { nowInTimestamp } from "lib/time";
-import { saveInDB } from "lib/database";
+import { saveInDB, getInDB } from "lib/database";
 import { generateRandomToken } from "lib/token";
 import { sendAuthMail } from "lib/mailer";
 
@@ -14,7 +14,7 @@ const handler = async (req, res) => {
 
 	try {
 		pipeAuthCheck(method, "POST", email, "Email"); //Checking on Request
-		const user = await getUser(db.collection("users"), email); //Check If User
+		const user = await getInDB(db.collection("users"), { email: email }); //Check If User
 		const newUser = !user && (await saveInDB(db.collection("users"), createUser(email, now))); //If not Create New User
 		const userID = user ? user._id : newUser.insertedId; //Get UserID
 		const authToken = generateRandomToken(now, userID); //Create Auth Token
