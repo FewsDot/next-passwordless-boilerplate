@@ -1,7 +1,7 @@
 import { connectToDatabase } from "lib/mongodb";
 import { pipeVerifyCheck, checkValidity } from "lib/requestChecker";
 import { nowInTimestamp } from "lib/time";
-import { getInDB } from "lib/database";
+import { getInDB, deleteAllInDB, modifyInDB } from "lib/database";
 import { generateJWT } from "lib/token";
 
 const handler = async (req, res) => {
@@ -20,7 +20,17 @@ const handler = async (req, res) => {
 		);
 		checkValidity(now, tokenFromDB); //Check Token validity
 		const jwt = generateJWT(now, tokenFromDB.userID); //Create JWT
-		//TODO: Delete alla token of user in the DB
+		await deleteAllInDB(db.collection("tokens"), {
+			//Delete all token of user in the DB
+			userID: tokenFromDB.userID,
+		});
+		// Update User to Verify if it's the first time
+		tokenFromDB.type === "SignUp" &&
+			(await modifyInDB(
+				db.collection("users"),
+				{ _id: tokenFromDB.userID },
+				{ $set: { verified: true } }
+			));
 		res.setHeader("Authorization", "Bearer " + jwt); //Send JWT
 		res.status(200).json({
 			//Return Succes
