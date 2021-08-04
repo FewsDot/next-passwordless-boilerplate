@@ -1,7 +1,7 @@
 import { connectToDatabase } from "lib/mongodb";
-import { pipeVerifyCheck } from "lib/requestChecker";
+import { pipeVerifyCheck, throwerError } from "lib/requestChecker";
 import { nowInTimestamp } from "lib/time";
-import { getToken } from "lib/token";
+import { getToken, checkValidity } from "lib/token";
 
 const handler = async (req, res) => {
 	const { db } = await connectToDatabase();
@@ -13,7 +13,9 @@ const handler = async (req, res) => {
 		pipeVerifyCheck(method, "GET", token, "Token"); //Check Method & param
 
 		const tokenFromDB = await getToken(db.collection("tokens"), token); //Check If Token exist
-
+		const isValid = checkValidity(now, tokenFromDB.validity, () =>
+			throwerError(token, "Is expired! Please retry to auth")
+		);
 		//Check token validity
 		//Create JWT
 		//Send JWT
@@ -23,6 +25,7 @@ const handler = async (req, res) => {
 			method: method,
 			tokenFromRequest: token,
 			tokenFromDB: tokenFromDB,
+			isValid: isValid,
 		});
 	} catch (error) {
 		res.status(400).json(error);
