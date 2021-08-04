@@ -12,7 +12,6 @@ const handler = async (req, res) => {
 	try {
 		pipeVerifyCheck(method, "GET", token, "token"); //Check Method & param
 
-		//TODO: Check if token is in db
 		const tokenFromDB = await getToken(db.collection("tokens"), token); //Check If Token exist
 
 		//Check token validity
