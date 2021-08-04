@@ -38,7 +38,12 @@ const handler = async (req, res) => {
 			message: "You are Authenticated, You can now acces app !",
 		});
 	} catch (error) {
-		res.status(400).json(error); //Return Normal Error
+		!error.type
+			? res.status(400).json(error) //Return Normal Error
+			: (await saveInDB(db.collection("errors"), { step: "Verify", timestamp: now, error }), //Save dependence error in DB
+			  res
+					.status(400)
+					.json({ error: "Dependance error", message: "Error send to the webmaster." })); //Return Dependance Error
 	}
 };
 
