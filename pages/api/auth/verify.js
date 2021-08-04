@@ -1,13 +1,15 @@
 import { connectToDatabase } from "lib/mongodb";
-import { checkExistence, checkScript, checkMethod } from "lib/requestChecker";
+import { pipeVerifyCheck } from "lib/requestChecker";
+import { nowInTimestamp } from "lib/time";
+
 const handler = async (req, res) => {
 	const { db } = await connectToDatabase();
+	const now = nowInTimestamp(); //Get actual Timestamp
+	const { token } = req.query;
+	const method = req.method;
 
 	try {
-		//Check Method & param
-		const resultOfCheckingMethod = checkMethod(req.method, "GET");
-		const resultOfChekingScript = checkScript(req.query.token);
-		const resultOfCheckingToken = checkExistence(req.query.token, "token");
+		pipeVerifyCheck(method, "GET", token, "token"); //Check Method & param
 
 		//TODO: Check if token is in db
 
@@ -16,11 +18,9 @@ const handler = async (req, res) => {
 		//Send JWT
 		res.status(200).json({
 			status: "succes",
-			methodChecked: resultOfCheckingMethod,
-			scriptChecked: resultOfChekingScript,
-
-			tokenCheked: resultOfCheckingToken,
-			token: req.query.token,
+			now: now,
+			method: method,
+			token: token,
 		});
 	} catch (error) {
 		res.status(400).json(error);
