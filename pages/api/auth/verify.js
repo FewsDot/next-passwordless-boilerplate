@@ -1,6 +1,7 @@
 import { connectToDatabase } from "lib/mongodb";
 import { pipeVerifyCheck } from "lib/requestChecker";
 import { nowInTimestamp } from "lib/time";
+import { getToken } from "lib/token";
 
 const handler = async (req, res) => {
 	const { db } = await connectToDatabase();
@@ -12,6 +13,7 @@ const handler = async (req, res) => {
 		pipeVerifyCheck(method, "GET", token, "token"); //Check Method & param
 
 		//TODO: Check if token is in db
+		const tokenFromDB = await getToken(db.collection("tokens"), token); //Check If Token exist
 
 		//Check token validity
 		//Create JWT
@@ -20,7 +22,8 @@ const handler = async (req, res) => {
 			status: "succes",
 			now: now,
 			method: method,
-			token: token,
+			tokenFromRequest: token,
+			tokenFromDB: tokenFromDB,
 		});
 	} catch (error) {
 		res.status(400).json(error);
