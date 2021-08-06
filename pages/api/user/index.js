@@ -1,6 +1,6 @@
-import { saveInDB } from "lib/database";
-import { nowInTimestamp } from "lib/time";
-import { pipeBearerCheck } from "lib/requestChecker";
+import { saveInDB } from "lib/backend/database";
+import { nowInTimestamp } from "lib/backend/time";
+import { pipeBearerCheck } from "lib/backend/requestChecker";
 
 const handler = async (req, res) => {
 	try {

@@ -1,8 +1,8 @@
-import { connectToDatabase } from "lib/mongodb";
-import { pipeVerifyCheck, checkValidity } from "lib/requestChecker";
-import { nowInTimestamp } from "lib/time";
-import { getInDB, deleteAllInDB, modifyInDB } from "lib/database";
-import { generateJWT } from "lib/token";
+import { connectToDatabase } from "lib/backend/mongodb";
+import { pipeVerifyCheck, checkValidity } from "lib/backend/requestChecker";
+import { nowInTimestamp } from "lib/backend/time";
+import { getInDB, deleteAllInDB, modifyInDB } from "lib/backend/database";
+import { generateJWT } from "lib/backend/token";
 
 const handler = async (req, res) => {
 	const { db } = await connectToDatabase(); //Init DB

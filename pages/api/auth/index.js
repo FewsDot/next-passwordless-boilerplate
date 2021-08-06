@@ -1,10 +1,10 @@
-import { connectToDatabase } from "lib/mongodb";
-import { pipeAuthCheck } from "lib/requestChecker";
-import { createUser } from "lib/users";
-import { nowInTimestamp } from "lib/time";
-import { saveInDB, getInDB } from "lib/database";
-import { generateRandomToken } from "lib/token";
-import { sendAuthMail } from "lib/mailer";
+import { connectToDatabase } from "lib/backend/mongodb";
+import { pipeAuthCheck } from "lib/backend/requestChecker";
+import { createUser } from "lib/backend/users";
+import { nowInTimestamp } from "lib/backend/time";
+import { saveInDB, getInDB } from "lib/backend/database";
+import { generateRandomToken } from "lib/backend/token";
+import { sendAuthMail } from "lib/backend/mailer";
 
 const handler = async (req, res) => {
 	const { db } = await connectToDatabase(); //Init DB
