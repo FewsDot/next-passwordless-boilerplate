@@ -22,3 +22,11 @@
 	line-height: 1.15;
 	font-size: 4rem;
 }
+.form {
+	width: 80%;
+	height: 150px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+}
