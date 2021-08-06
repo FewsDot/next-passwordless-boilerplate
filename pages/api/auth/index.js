@@ -1,5 +1,5 @@
 import { connectToDatabase } from "lib/backend/mongodb";
-import { pipeAuthCheck } from "lib/backend/requestChecker";
+import { pipeCheck } from "lib/backend/requestChecker";
 import { createUser } from "lib/backend/users";
 import { nowInTimestamp } from "lib/backend/time";
 import { saveInDB, getInDB } from "lib/backend/database";
@@ -13,7 +13,7 @@ const handler = async (req, res) => {
 	const method = req.method; //Get method from Request
 
 	try {
-		pipeAuthCheck(method, "POST", email, "Email"); //Checking on Request
+		pipeCheck(method, "POST", email, "Email"); //Checking on Request
 		const user = await getInDB(db.collection("users"), { email: email }); //Check If User
 		const newUser = !user && (await saveInDB(db.collection("users"), createUser(email, now))); //If not Create New User
 		const userID = user ? user._id : newUser.insertedId; //Get UserID

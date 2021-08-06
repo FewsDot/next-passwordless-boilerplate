@@ -1,5 +1,6 @@
 import { connectToDatabase } from "lib/backend/mongodb";
-import { pipeVerifyCheck, checkValidity } from "lib/backend/requestChecker";
+import { pipeCheck, checkValidity } from "lib/backend/requestChecker";
+
 import { nowInTimestamp } from "lib/backend/time";
 import { getInDB, deleteAllInDB, modifyInDB } from "lib/backend/database";
 import { generateJWT } from "lib/backend/token";
@@ -11,7 +12,7 @@ const handler = async (req, res) => {
 	const method = req.method; //Get method from Request
 
 	try {
-		pipeVerifyCheck(method, "GET", token, "Token"); //Check Method & param
+		pipeCheck(method, "GET", token, "Token"); //Check Method & param
 		const tokenFromDB = await getInDB(
 			//Check if Token exist
 			db.collection("tokens"),

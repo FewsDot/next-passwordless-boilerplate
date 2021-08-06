@@ -1,16 +1,17 @@
 import { connectToDatabase } from "lib/backend/mongodb";
 import { ObjectId } from "mongodb";
 import { getInDB } from "lib/backend/database";
-import { pipeBearerCheck } from "lib/backend/requestChecker";
+import { pipeCheck } from "lib/backend/requestChecker";
 
 const handler = async (req, res) => {
 	const { db } = await connectToDatabase(); //Init DB
+	const method = req.method; //Get method from Request
+	const { authorization } = req.headers; //Get JWT from Request Header
 
 	try {
-		const { authorization } = req.headers; //Get JWT from Request Header
-		const { userID } = pipeBearerCheck(authorization, "Bearer Token"); // Check If JWT exist and is not expired.
-		//TODO: //Get User info from DB with user id contenue dans son jwt decodé
+		const { userID } = pipeCheck(method, "GET", authorization, "Bearer Token"); // Check If JWT exist and is not expired.
 		const userFromDB = await getInDB(
+			//Get User info from DB
 			db.collection("users"),
 			{ _id: ObjectId(userID) },
 			{ status: "Error", message: "User Not Exist !" }
