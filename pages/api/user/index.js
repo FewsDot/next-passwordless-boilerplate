@@ -6,7 +6,7 @@ import { pipeCheck } from "lib/backend/requestChecker";
 const handler = async (req, res) => {
 	const { db } = await connectToDatabase(); //Init DB
 	const method = req.method; //Get method from Request
-	const authorization = req.headers.authorization; //Get JWT from Request Header
+	const authorization = req.headers.bearer || req.headers.cookie; //Get JWT from Request Header
 
 	try {
 		const { userID } = pipeCheck(method, "GET", authorization, "Bearer Token"); // Check If JWT exist and is not expired.

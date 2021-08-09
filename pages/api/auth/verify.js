@@ -1,7 +1,6 @@
 import cookie from "cookie";
 import { connectToDatabase } from "lib/backend/mongodb";
 import { pipeCheck, checkValidity } from "lib/backend/requestChecker";
-
 import { nowInTimestamp } from "lib/backend/time";
 import { getInDB, deleteAllInDB, modifyInDB } from "lib/backend/database";
 import { generateJWT } from "lib/backend/token";
@@ -35,8 +34,8 @@ const handler = async (req, res) => {
 			));
 		res.setHeader(
 			"Set-Cookie",
-			cookie.serialize("authorization", `Bearer ${jwt}`, {
-				maxAge: 60,
+			cookie.serialize("Bearer", `${jwt}`, {
+				maxAge: process.env.EXPIRATION_LONG,
 				sameSite: "strict",
 				path: "/",
 				httpOnly: true,

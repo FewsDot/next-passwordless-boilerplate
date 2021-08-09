@@ -36,7 +36,6 @@ const Verify = ({ token }) => {
 			<main className={styles.main}>
 				<h1 className={styles.title}>NextJS Passwordless Boilerplate</h1>
 				<h3>Verify Auth</h3>
-				<h6> Please wait...</h6>
 
 				<p>{status}</p>
 				<p>{message}</p>
