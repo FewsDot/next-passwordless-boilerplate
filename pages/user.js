@@ -38,10 +38,8 @@ const User = ({ data }) => {
 
 export async function getServerSideProps(context) {
 	const tokenFromCookies = context.req.cookies;
-	const { NEXT_PUBLIC_ENVIRONMENT, NEXT_PUBLIC_URL_PROD, NEXT_PUBLIC_URL_DEV } = process.env;
-	const urlToFetch =
-		NEXT_PUBLIC_ENVIRONMENT === "PROD" ? NEXT_PUBLIC_URL_PROD : NEXT_PUBLIC_URL_DEV;
-	const res = await fetch(`${urlToFetch}/api/user`, {
+
+	const res = await fetch("/api/user", {
 		headers: tokenFromCookies,
 	});
 	const data = await res.json();

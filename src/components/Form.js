@@ -1,7 +1,7 @@
 import styles from "styles/Home.module.css";
 import { useState } from "react";
 
-const Form = ({ url }) => {
+const Form = () => {
 	const [status, setStatus] = useState("");
 	const [message, setMessage] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
@@ -9,7 +9,7 @@ const Form = ({ url }) => {
 	const registerUser = async (event) => {
 		setIsLoading(true);
 		event.preventDefault(); // don't redirect the page
-		const res = await fetch(`${url}/api/auth`, {
+		const res = await fetch("/api/auth", {
 			body: JSON.stringify({
 				email: event.target.email.value,
 			}),
