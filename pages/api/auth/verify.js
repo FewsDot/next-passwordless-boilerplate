@@ -1,3 +1,4 @@
+import cookie from "cookie";
 import { connectToDatabase } from "lib/backend/mongodb";
 import { pipeCheck, checkValidity } from "lib/backend/requestChecker";
 
@@ -32,7 +33,16 @@ const handler = async (req, res) => {
 				{ _id: tokenFromDB.userID },
 				{ $set: { verified: true } }
 			));
-		res.setHeader("Authorization", "Bearer " + jwt); //Send JWT
+		res.setHeader(
+			"Set-Cookie",
+			cookie.serialize("authorization", `Bearer ${jwt}`, {
+				maxAge: 60,
+				sameSite: "strict",
+				path: "/",
+				httpOnly: true,
+				//secure : true
+			})
+		); //Send JWT
 		res.status(200).json({
 			//Return Succes
 			status: "Succes",

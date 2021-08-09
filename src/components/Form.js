@@ -1,6 +1,10 @@
 import styles from "styles/Home.module.css";
+import { useState } from "react";
 
 const Form = () => {
+	const [status, setStatus] = useState("");
+	const [message, setMessage] = useState("");
+
 	const registerUser = async (event) => {
 		event.preventDefault(); // don't redirect the page
 		const res = await fetch("http://localhost:3000/api/auth", {
@@ -15,8 +19,8 @@ const Form = () => {
 
 		const result = await res.json();
 
-		console.log("result after submitting :");
-		console.log(result);
+		setStatus(result.status);
+		setMessage(result.message);
 	};
 
 	return (
@@ -31,6 +35,8 @@ const Form = () => {
 				placeholder="Please, type your email to Login or Sign Up"
 			/>
 			<button type="submit">Authenticate</button>
+			<p>{status}</p>
+			<p>{message}</p>
 		</form>
 	);
 };
