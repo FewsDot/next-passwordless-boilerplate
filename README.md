@@ -1,8 +1,44 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Welcome to Next-passwordless-boilerplate
+
+This is minimalistic auth system based on Next.js fullstack serverless project.
+
+You need to have a mail server and mongoDB to use it !
+
+Dependencies (outside react) :
+
+- cookie: ^0.4.1,
+- jsonwebtoken: ^8.5.1,
+- mongodb: ^4.0.1,
+- nanoid: ^3.1.23,
+- next: 11.0.1,
+- nodemailer: ^6.6.3,
+- ramda: ^0.27.1,
 
 ## Getting Started
 
-First, run the development server:
+First, install dependencies:
+
+```bash
+npm install
+```
+
+After, add an .env.local file in the root of the project and don't forget to write yours :
+
+MONGODB_URI
+MONGODB_DB
+EMAIL_SERVER_USER
+EMAIL_SERVER_PASSWORD
+EMAIL_SERVER_HOST
+EMAIL_SERVER_PORT
+EMAIL_FROM
+EXPIRATION_LONG
+EXPIRATION_SHORT
+JWT_SECRET
+NEXT_PUBLIC_URL_PROD
+NEXT_PUBLIC_URL_DEV=http://localhost:3000
+NEXT_PUBLIC_ENVIRONMENT=DEV
+
+Then, run the development server:
 
 ```bash
 npm run dev
