@@ -7,8 +7,13 @@ const Verify = ({ token }) => {
 	const [status, setStatus] = useState("");
 	const [message, setMessage] = useState("");
 
+	const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT;
+	const URL_PROD = process.env.NEXT_PUBLIC_URL_PROD;
+	const URL_DEV = process.env.NEXT_PUBLIC_URL_DEV;
+	const urlToFetch = ENVIRONMENT === "PROD" ? URL_PROD : URL_DEV;
+
 	useEffect(() => {
-		-fetch(`http://localhost:3000/api/auth/verify?token=${token}`, {
+		-fetch(`${urlToFetch}/api/auth/verify?token=${token}`, {
 			credentials: "include",
 		})
 			.then((response) => response.json())

@@ -40,7 +40,7 @@ const handler = async (req, res) => {
 				sameSite: "strict",
 				path: "/",
 				httpOnly: true,
-				//secure : true
+				secure: process.env.ENVIRONMENT === "PROD" ? true : false,
 			})
 		); //Send JWT
 		res.status(200).json({

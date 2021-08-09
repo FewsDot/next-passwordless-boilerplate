@@ -1,13 +1,15 @@
 import styles from "styles/Home.module.css";
 import { useState } from "react";
 
-const Form = () => {
+const Form = ({ url }) => {
 	const [status, setStatus] = useState("");
 	const [message, setMessage] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
 
 	const registerUser = async (event) => {
+		setIsLoading(true);
 		event.preventDefault(); // don't redirect the page
-		const res = await fetch("http://localhost:3000/api/auth", {
+		const res = await fetch(`${url}/api/auth`, {
 			body: JSON.stringify({
 				email: event.target.email.value,
 			}),
@@ -16,9 +18,8 @@ const Form = () => {
 			},
 			method: "POST",
 		});
-
 		const result = await res.json();
-
+		setIsLoading(false);
 		setStatus(result.status);
 		setMessage(result.message);
 	};
@@ -35,8 +36,16 @@ const Form = () => {
 				placeholder="Please, type your email to Login or Sign Up"
 			/>
 			<button type="submit">Authenticate</button>
-			<p>{status}</p>
-			<p>{message}</p>
+			{isLoading ? (
+				<>
+					<p>Loading...</p>
+				</>
+			) : (
+				<>
+					<p>{status}</p>
+					<p>{message}</p>
+				</>
+			)}
 		</form>
 	);
 };

@@ -27,7 +27,9 @@ const User = ({ data }) => {
 						<p>{userFromDB.createdAt}</p>
 					</>
 				) : (
-					<p>{message}</p>
+					<>
+						<p>{message}</p>
+					</>
 				)}
 			</main>
 		</div>
@@ -36,8 +38,10 @@ const User = ({ data }) => {
 
 export async function getServerSideProps(context) {
 	const tokenFromCookies = context.req.cookies;
-
-	const res = await fetch(`http://localhost:3000/api/user`, {
+	const { NEXT_PUBLIC_ENVIRONMENT, NEXT_PUBLIC_URL_PROD, NEXT_PUBLIC_URL_DEV } = process.env;
+	const urlToFetch =
+		NEXT_PUBLIC_ENVIRONMENT === "PROD" ? NEXT_PUBLIC_URL_PROD : NEXT_PUBLIC_URL_DEV;
+	const res = await fetch(`${urlToFetch}/api/user`, {
 		headers: tokenFromCookies,
 	});
 	const data = await res.json();
