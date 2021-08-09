@@ -38,10 +38,13 @@ const User = ({ data }) => {
 
 export async function getServerSideProps(context) {
 	const tokenFromCookies = context.req.cookies;
+	const ENVIRONMENT = process.env.ENVIRONMENT;
+	const URL_PROD = process.env.URL_PROD;
+	const URL_DEV = process.env.URL_DEV;
 
-	//const url = () => (process.env.ENVIRONMENT = "DEV" ? process.env.URL_DEV : process.env.URL_PROD);
+	const url = ENVIRONMENT === "PROD" ? URL_PROD : URL_DEV;
 
-	const res = await fetch(`${process.env.URL_PROD}/api/user`, {
+	const res = await fetch(`${url}/api/user`, {
 		headers: tokenFromCookies,
 	});
 	const data = await res.json();
