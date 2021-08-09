@@ -7,7 +7,7 @@ const Verify = ({ token }) => {
 	const [status, setStatus] = useState("");
 	const [message, setMessage] = useState("");
 	useEffect(() => {
-		-fetch("/api/auth/verify?token=${token}", {
+		fetch(`/api/auth/verify?token=${token}`, {
 			credentials: "include",
 		})
 			.then((response) => response.json())
@@ -15,7 +15,7 @@ const Verify = ({ token }) => {
 				setStatus(data.status);
 				setMessage(data.message);
 			});
-	});
+	}, [token]);
 
 	return (
 		<div className={styles.container}>

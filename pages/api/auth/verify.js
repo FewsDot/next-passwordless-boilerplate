@@ -13,12 +13,14 @@ const handler = async (req, res) => {
 
 	try {
 		pipeCheck(method, "GET", token, "Token"); //Check Method & param
+
 		const tokenFromDB = await getInDB(
 			//Check if Token exist
 			db.collection("tokens"),
 			{ token: token },
 			{ status: "Error", message: "Token Not Exist !" }
 		);
+
 		checkValidity(now, tokenFromDB); //Check Token validity
 		const jwt = generateJWT(now, tokenFromDB.userID); //Create JWT
 		await deleteAllInDB(db.collection("tokens"), {
